@@ -32,25 +32,25 @@ function suggestBobaTea(artists: { name: string, monthlyListeners: number }[]): 
     const topArtists = artists.sort((a, b) => b.monthlyListeners - a.monthlyListeners).slice(0, 10);
 
     // calculate the total popularity score based on listening count ranges
-    let popularityScore = 0;
+    let score = 0;
 
     // categorize each artist by their listening count and assign a "popularity score"
     topArtists.forEach((artist) => {
         if (artist.monthlyListeners <= 20) {
-            popularityScore += 0;  // least basic
+            score += 0;  // least basic
         } else if (artist.monthlyListeners <= 40) {
-            popularityScore += 1;  // a bit basic
+            score += 1;  // a bit basic
         } else if (artist.monthlyListeners <= 60) {
-            popularityScore += 2;  // more basic
+            score += 2;  // more basic
         } else if (artist.monthlyListeners <= 80) {
-            popularityScore += 3;  // more basic
+            score += 3;  // more basic
         } else {
-            popularityScore += 4;  // most basic
+            score += 4;  // most basic
         }
     });
 
     // average score (based on top 10 artists)
-    const averagePopularity = popularityScore / topArtists.length;
+    const averagePopularity = score / topArtists.length;
 
     // suggest tea based on average popularity score
     if (averagePopularity <= 1) {  // least basic 
