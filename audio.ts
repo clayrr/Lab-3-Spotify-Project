@@ -42,7 +42,7 @@ function matchEnergyLevel(energy: number): string {
       const energyLevel = matchEnergyLevel(energy);
   
       res.json({
-          message: `Based on your top music taste, we have concluded that you have ${energyLevel}.`
+          message: `Based on your music taste, we have concluded that you have ${energyLevel}.`
       });
   });
   */
