@@ -57,7 +57,7 @@ function suggestBobaTea(artists: { name: string, monthlyListeners: number }[]): 
         return teas.leastBasic[Math.floor(Math.random() * teas.leastBasic.length)];
     } else if (averagePopularity <= 2) {  // a bit basic
         return teas.slightlyBasic[Math.floor(Math.random() * teas.slightlyBasic.length)];
-    } else if (averagePopularity <= 2) {  // more basic
+    } else if (averagePopularity <= 3) {  // more basic
         return teas.slightlyBasic[Math.floor(Math.random() * teas.moreBasic.length)];
     } else {  // most basic
         return teas.moreBasic[Math.floor(Math.random() * teas.mostBasic.length)];
