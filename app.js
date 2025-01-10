@@ -6,9 +6,9 @@ const Buffer = require('buffer').Buffer;
 const app = express();
 let previousState = null; 
 
-const client_id = '';
-const client_secret = '';
-const redirect_uri = 'http://localhost:3000/callback'; // must match web app
+const client_id = 'ba88f3191dc94daea8320aa3e0ee3f4c';
+const client_secret = '467deef8549046e584bfc02542552aa4';
+const redirect_uri = 'http://localhost:3000/callback/'; // must match web app
 
 // Random string generator mandated security function
 function generateRandomString(length) {
@@ -41,6 +41,7 @@ app.get('/callback', async (req, res) => {
     const code = req.query.code || null;
     const state = req.query.state || null;
   
+    // Security 
     if (state === null || state !== previousState) {
       res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
       return;
