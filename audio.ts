@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 
 const app = express();
 const port = 3000;
-const energy: number; 
+const energy = 0.23; 
 
 //get spotify API stuff - code from the website - ...?  - it doesn't work :(
 /*curl --request GET \
@@ -18,14 +18,14 @@ function matchEnergyLevel(energy: number): string {
     } else if (energy < 0.5) {
       return 'Moderately low energy)';
     } else if (energy < 0.75) {
-      return 'Moderate energy)';
+      return 'Moderately high energy)';
     } else {
       return 'High energy)';
     } 
   }
   
   // endpoint
-  app.get('/track-energy', (req: Request, res: Response) => {
+  app.get('/energyLevel', (req: Request, res: Response) => {
       const energyLevel = matchEnergyLevel(energy);
   
       res.json({
@@ -33,4 +33,9 @@ function matchEnergyLevel(energy: number): string {
       });
   });
 
+
+// start the server
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
 
