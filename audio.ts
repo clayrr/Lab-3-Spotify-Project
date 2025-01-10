@@ -1,19 +1,8 @@
-//-----------------------------
-//#region Database Connection
-//-----------------------------
-import path from "path";
-import {Request, Response} from 'express';
-import sqlite3 from "sqlite3";
-import { RequestHandler } from "express-serve-static-core";
-import { ParsedQs } from "qs";
-const sqlite = sqlite3.verbose();
-const dbFile = path.join(__dirname, "foo.db");
-// below is the line for vanilla ES6 js to work; not necessary with typescript
-// const dbFile = path.join(path.dirname(fileURLToPath(import.meta.url)), "foo.db");
-const db = new sqlite.Database(dbFile, (error) => {
-  if (error) return console.error(error.message);
-  console.log(`Connected to database ${dbFile}`);
-});
+import express, { Request, Response } from 'express';
+
+const app = express();
+const port = 3000;
+const energy: number; 
 
 //get spotify API stuff - code from the website - ...?  - it doesn't work :(
 /*curl --request GET \
@@ -22,8 +11,7 @@ const db = new sqlite.Database(dbFile, (error) => {
 */
 //need: client id, spotify track ID
 
-//map track 
-
+//use the energy level of the top track they listen to
 function matchEnergyLevel(energy: number): string {
     if (energy < 0.25) {
       return 'Low energy)';
@@ -37,7 +25,6 @@ function matchEnergyLevel(energy: number): string {
   }
   
   // endpoint
-  /*
   app.get('/track-energy', (req: Request, res: Response) => {
       const energyLevel = matchEnergyLevel(energy);
   
@@ -45,5 +32,5 @@ function matchEnergyLevel(energy: number): string {
           message: `Based on your music taste, we have concluded that you have ${energyLevel}.`
       });
   });
-  */
+
 
