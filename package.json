@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +18,9 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "@types/node-fetch": "^2.6.12",
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2"
   }
 }
