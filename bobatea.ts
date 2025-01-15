@@ -12,10 +12,10 @@ const artists = [
     { name: "Artist 5", monthlyListeners: 6 },
     { name: "Artist 6", monthlyListeners: 101 },
     { name: "Artist 7", monthlyListeners: 2 },
-  { name: "Artist 8", monthlyListeners: 22 },
-  { name: "Artist 9", monthlyListeners: 15 },
-  { name: "Artist 10", monthlyListeners: 78 },
-  { name: "Artist 11", monthlyListeners: 3 },
+    { name: "Artist 8", monthlyListeners: 22 },
+    { name: "Artist 9", monthlyListeners: 15 },
+    { name: "Artist 10", monthlyListeners: 78 },
+    { name: "Artist 11", monthlyListeners: 3 },
 ];
 
 // tea options 
@@ -77,5 +77,5 @@ app.get('/bubbletea', (req: Request, res: Response) => {
 // start the server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
-  });
+});
 
