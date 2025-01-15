@@ -10,16 +10,6 @@ const client_id = 'ba88f3191dc94daea8320aa3e0ee3f4c';
 const client_secret = '467deef8549046e584bfc02542552aa4';
 const redirect_uri = 'http://localhost:3000/callback/'; // must match web app
 
-// Random string generator mandated security function
-function generateRandomString(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-}
-
 // User authorization 
 app.get('/login', (req, res) => {
     previousState = generateRandomString(16);  
@@ -34,6 +24,18 @@ app.get('/login', (req, res) => {
         state: previousState
       }));
 });
+
+function generateRandomString(length) {
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+  
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        result += charset[randomIndex];
+    }
+  
+    return result;
+}
 
 // Retrieve token
 
