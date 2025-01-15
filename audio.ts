@@ -32,8 +32,6 @@ function matchEnergyLevel(energy: number): string {
           message: `Based on your music taste, we have concluded that you have ${energyLevel}.`
       });
   });
-
-
 // start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
