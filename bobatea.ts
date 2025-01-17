@@ -5,17 +5,17 @@ const port = 3000;
 
 //  artist data; simulated numbers
 const artists = [
-    { name: "Artist 1", monthlyListeners: 15 },
-    { name: "Artist 2", monthlyListeners: 34 },
-    { name: "Artist 3", monthlyListeners: 51 },
-    { name: "Artist 4", monthlyListeners: 73 },
-    { name: "Artist 5", monthlyListeners: 6 },
-    { name: "Artist 6", monthlyListeners: 101 },
-    { name: "Artist 7", monthlyListeners: 2 },
-    { name: "Artist 8", monthlyListeners: 22 },
-    { name: "Artist 9", monthlyListeners: 15 },
-    { name: "Artist 10", monthlyListeners: 78 },
-    { name: "Artist 11", monthlyListeners: 3 },
+    { name: "Artist 1", popularity: 15 },
+    { name: "Artist 2", popularity: 34 },
+    { name: "Artist 3", popularity: 51 },
+    { name: "Artist 4", popularity: 73 },
+    { name: "Artist 5", popularity: 6 },
+    { name: "Artist 6", popularity: 101 },
+    { name: "Artist 7", popularity: 2 },
+    { name: "Artist 8", popularity: 22 },
+    { name: "Artist 9", popularity: 15 },
+    { name: "Artist 10", popularity: 78 },
+    { name: "Artist 11", popularity: 3 },
 ];
 
 // tea options 
@@ -27,22 +27,22 @@ const teas = {
 };
 
 // function to determine the tea recommendation 
-function suggestBobaTea(artists: { name: string, monthlyListeners: number }[]): string {
+function suggestBobaTea(artists: { name: string, popularity: number }[]): string {
     // sort artists by monthly listeners (descending order)
-    const topArtists = artists.sort((a, b) => b.monthlyListeners - a.monthlyListeners).slice(0, 10);
+    const topArtists = artists.sort((a, b) => b.popularity - a.popularity).slice(0, 10);
 
     // calculate the total popularity score based on listening count ranges
     let score = 0;
 
     // categorize each artist by their listening count and assign a "popularity score"
     topArtists.forEach((artist) => {
-        if (artist.monthlyListeners <= 20) {
+        if (artist.popularity <= 20) {
             score += 0;  // least basic
-        } else if (artist.monthlyListeners <= 40) {
+        } else if (artist.popularity <= 40) {
             score += 1;  // a bit basic
-        } else if (artist.monthlyListeners <= 60) {
+        } else if (artist.popularity <= 60) {
             score += 2;  // more basic
-        } else if (artist.monthlyListeners <= 80) {
+        } else if (artist.popularity <= 80) {
             score += 3;  // more basic
         } else {
             score += 4;  // most basic

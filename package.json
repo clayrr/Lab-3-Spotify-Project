@@ -2,7 +2,7 @@
   "name": "lab-3-spotify-project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,6 +21,6 @@
     "@types/node-fetch": "^2.6.12",
     "axios": "^1.7.9",
     "express": "^4.21.2",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^2.7.0"
   }
 }

@@ -1,77 +1,59 @@
+// Authorization - work in progress
+
 const express = require('express');
-const axios = require('axios');
+const fetch = require('node-fetch');
 const querystring = require('querystring');
-const Buffer = require('buffer').Buffer; 
 
-const app = express();
-let previousState = null; 
-
+// paste client info here
 const client_id = '';
 const client_secret = '';
-const redirect_uri = 'http://localhost:3000/callback'; // must match web app
+const redirect_uri = 'http://localhost:8888/callback';
 
-// Random string generator mandated security function
-function generateRandomString(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-}
+const app = express();
 
-// User authorization 
+// Direct to Spotify login page
 app.get('/login', (req, res) => {
-    previousState = generateRandomString(16);  
-    const scope = 'app-remote-control';
-  
-    res.redirect('https://accounts.spotify.com/authorize?' +
-      querystring.stringify({
-        response_type: 'code',
-        client_id: client_id,
-        scope: scope,
-        redirect_uri: encodeURIComponent(redirect_uri),
-        state: previousState
-      }));
+  const authUrl = 'https://accounts.spotify.com/authorize?' + querystring.stringify({
+    response_type: 'code',
+    client_id: client_id,
+    scope: 'user-read-private user-read-email',
+    redirect_uri: redirect_uri,
+  });
+
+  res.redirect(authUrl);
 });
 
-// Retrieve token
-
+// Spotify redirection
 app.get('/callback', async (req, res) => {
-    const code = req.query.code || null;
-    const state = req.query.state || null;
-  
-    if (state === null || state !== previousState) {
-      res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
-      return;
-    }
-  
-    if (!code) {
-      return res.redirect('/#' + querystring.stringify({ error: 'invalid_code' }));
-    }
+  const { code } = req.query; // Authorization code
 
-    const authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
-        method: 'post',
-        data: {
-            code: code,
-            redirect_uri: redirect_uri,
-            grant_type: 'authorization_code'
-        },
-        headers: {
-            'content-type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
-        },
-    };
+  // Authorization code exchange for access and refresh tokens
+  const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${Buffer.from(client_id + ':' + client_secret).toString('base64')}`
+    },
+    body: querystring.stringify({
+      code,
+      redirect_uri,
+      grant_type: 'authorization_code'
+    })
+  });
 
-    try {
-        const response = await axios(authOptions);
-        console.log(response.data);
-    } catch (error) {
-        console.error('Error exchanging code for token:', error.response ? error.response.data : error.message);
-    }
+  const tokenData = await tokenResponse.json();
+  const { access_token, refresh_token } = tokenData;
+
+  // Fetch user info
+  const userResponse = await fetch('https://api.spotify.com/v1/me', {
+    headers: { 'Authorization': `Bearer ${access_token}` }
+  });
+
+  const userData = await userResponse.json();
+  console.log('User data:', userData);
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
+// TBD: refresh token after expiration
+
+app.listen(8888, () => console.log('Listening on http://localhost:8888'));
+
