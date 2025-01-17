@@ -19,7 +19,7 @@ const db = new sqlite.Database(dbFile, (error) => {
 
 
 const app = express();
-const port = 3000;
+const port = 8888;
 
 
 const energy = 0.5;
