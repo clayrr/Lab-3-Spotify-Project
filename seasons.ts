@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 
 const app = express();
-const port = 3000;
+const port = 8888;
 
 // simulated value for demonstration
 const danceability = 0.79;
