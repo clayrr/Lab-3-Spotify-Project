@@ -3,10 +3,12 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const querystring = require('querystring');
+require("dotenv").config();
 
 // paste client info here
-const client_id = '';
-const client_secret = '';
+const client_id = process.env.SPOTIFY_CLIENT_ID;
+const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+console.log("client_id is: ", client_id);
 const redirect_uri = 'http://localhost:8888/callback';
 
 const app = express();
