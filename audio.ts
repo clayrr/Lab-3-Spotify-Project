@@ -17,10 +17,10 @@ const db = new sqlite.Database(dbFile, (error) => {
   console.log(`Connected to database ${dbFile}`);
 });*/
 
-
 const app = express();
 const port = 8888;
 
+// 1. Energy Level
 const energy = 0.5;
 
 function matchEnergyLevel(energy: number): string {
@@ -36,7 +36,6 @@ function matchEnergyLevel(energy: number): string {
   }
   
   // endpoint
-  
   app.get('/track-energy', (req: Request, res: Response) => {
       const energyLevel = matchEnergyLevel(energy);
   
@@ -45,6 +44,8 @@ function matchEnergyLevel(energy: number): string {
       });
   });
   
+
+// 2. Bubble Tea
 
 const artists = [
     { name: "Artist 1", popularity: 15 },
@@ -115,6 +116,8 @@ app.get('/bubbletea', (req: Request, res: Response) => {
     });
 });
 
+
+// Danceability
 // simulated value for demonstration
 const danceability = 0.79;
 
@@ -138,4 +141,8 @@ app.get('/season', (req: Request, res: Response) => {
   res.json({
     message: `based on your music taste, ${seasonMessage}`
   });
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
