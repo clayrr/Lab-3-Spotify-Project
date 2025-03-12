@@ -124,13 +124,13 @@ const danceability = 0.79;
 // helper function to classify danceability into seasons with descriptive messages
 function matchDanceabilityToSeason(danceability: number): string {
   if (danceability < 0.25) {
-    return 'your music vibe is like winter: calm,and introspective. you are like a cup of hot chocolate on a snow day';
+    return 'your music vibe is like winter: calm,and introspective. "a little blizzard follows you around in the summer. the blizzard eats you" - sebastian baxter, march 12 2025, 14.01.51';
   } else if (danceability < 0.5) {
-    return 'your music vibe is like autumn: mellow and reflective. you are like drinking a cup of hot apple cider in a pumpkin patch';
+    return 'your music vibe is like autumn: mellow and reflective. you jump into a pile of leaves, realize there is a pile of rusty metal underneath, and you pass away from tetanus';
   } else if (danceability < 0.75) {
-    return 'your music vibe is like spring: fresh and lively. you are like drinking herbal tea in a meadow';
+    return 'your music vibe is like spring: fresh and lively. you frolic around the flowers, trip into the tree, and have a wasp nest on your head. you die of brain damage (no head ct for you) ';
   } else {
-    return 'your music vibe is like summer: vibrant and energetic. you are like drinking lemonade by the pool';
+    return 'your music vibe is like summer: vibrant and energetic. you claim summer is your favorite month of the year due to the weather, but you really just suck at school.';
   }
 }
 
