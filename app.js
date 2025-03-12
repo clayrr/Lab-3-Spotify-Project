@@ -55,6 +55,20 @@ app.get('/callback', async (req, res) => {
   console.log('User data:', userData);
 });
 
+//stuff that might not work
+const _getTracks = async (token, tracksEndPoint) => {
+
+  const limit = 10;
+
+  const result = await fetch(`${tracksEndPoint}?limit=${limit}`, {
+      method: 'GET',
+      headers: { 'Authorization' : 'Bearer ' + token}
+  });
+
+  const data = await result.json();
+  return data.items;
+}
+
 // TBD: refresh token after expiration
 
 app.listen(8888, () => console.log('Listening on http://localhost:8888'));
