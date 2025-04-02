@@ -57,16 +57,19 @@ app.get('/callback', async (req, res) => {
 
 //stuff that might not work
 const _getTracks = async (token, tracksEndPoint) => {
-
   const limit = 10;
-
   const result = await fetch(`${tracksEndPoint}?limit=${limit}`, {
       method: 'GET',
       headers: { 'Authorization' : 'Bearer ' + token}
   });
-
   const data = await result.json();
   return data.items;
+}
+
+return{
+  _getTracks(){
+    return _getTracks();
+  }
 }
 
 // TBD: refresh token after expiration
