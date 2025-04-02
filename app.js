@@ -69,7 +69,35 @@ const _getTracks = async (token, tracksEndPoint) => {
   return data.items;
 }
 
-// TBD: refresh token after expiration
+//refresh access token draft
+const refreshAccessToken = async () => {
+  if (!refresh_token) {
+    console.error("no refresh token available.");
+    return;
+  }
+
+  console.log("refreshing access token...");
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${Buffer.from(client_id + ':' + client_secret).toString('base64')}`
+    },
+    body: querystring.stringify({
+      grant_type: 'refresh_token',
+      refresh_token: refresh_token
+    })
+  });
+
+  const data = await response.json();
+
+  if (data.access_token) {
+    access_token = data.access_token;
+    console.log('hiii this is your new access token: ', access_token);
+  } else {
+    console.error('your token did not refresh. better luck next time :)', data);
+  }
+};
 
 app.listen(8888, () => console.log('Listening on http://localhost:8888'));
 
