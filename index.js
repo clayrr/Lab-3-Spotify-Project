@@ -134,8 +134,6 @@ app.get('/bubbletea', (req, res) => {
 });
 
 //AUDIO.JS
-
-
 const energy = 0.5;
 
 function matchEnergyLevel(energy) {
@@ -186,21 +184,12 @@ app.get('/season', (req, res) => {
   });
 });
 
-
-
-
-
 // start the server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
 
 
-
-
-
 // TBD: refresh token after expiration
 
 app.listen(8888, () => console.log('Listening on http://localhost:8888'));
-
-
