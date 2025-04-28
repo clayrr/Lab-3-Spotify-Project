@@ -2,19 +2,20 @@ import express, { Request, Response } from 'express';
 const app = express();
 const port = 8888;
 
-//APP.JS 
+const express = require('express');
+const fetch = require('node-fetch');
+const querystring = require('querystring');
+require("dotenv").config();
 
-// Authorization - work in progress
+// paste client info here
+const client_id = process.env.SPOTIFY_CLIENT_ID;
+const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+console.log("client_id is: ", client_id);
+const redirect_uri = 'http://localhost:8888/callback';
 
 const express = require('express');
 const fetch = require('node-fetch');
 const querystring = require('querystring');
-
-// paste client info here
-const client_id = '';
-const client_secret = '';
-const redirect_uri = 'http://localhost:8888/callback';
-
 
 // Direct to Spotify login page
 app.get('/login', (req, res) => {
