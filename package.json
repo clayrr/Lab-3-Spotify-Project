@@ -15,7 +15,8 @@
     "@types/node": "^22.10.5",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "type":"module"
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.12",
