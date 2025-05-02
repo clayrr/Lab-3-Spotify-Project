@@ -9,7 +9,7 @@ onMounted(async () => {
   const code = params.get('code')
 
   if (code) {
-    const res = await fetch(`http://localhost:8888/callback?code=${code}`)
+    const res = await fetch(`http://localhost:8888/login?code=${code}`)
     const data = await res.json()
     user.value = data.user
     topTracks.value = data.tracks
