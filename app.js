@@ -28,9 +28,8 @@ app.get('/login', (req, res) => {
 
 // Spotify redirection
 app.get('/callback', async (req, res) => {
-  const { code } = req.query; // Authorization code
-
-  // Authorization code exchange for access and refresh tokens
+  const { code } = req.query;
+  res.redirect(`http://localhost:5173?access_token=${access_token}`);
   const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -43,46 +42,27 @@ app.get('/callback', async (req, res) => {
       grant_type: 'authorization_code'
     })
   });
+
   const tokenData = await tokenResponse.json();
-  const { access_token, refresh_token } = tokenData;
+  const { access_token } = tokenData;
 
-  // Fetch user info
+  // Fetch user profile
   const userResponse = await fetch('https://api.spotify.com/v1/me', {
-    headers: { 'Authorization': `Bearer ${access_token}` }
+    headers: { Authorization: `Bearer ${access_token}` }
   });
-
   const userData = await userResponse.json();
-  console.log('User data:', userData);
 
-  res.json(userData);
-});
-
-app.listen(8888, () => console.log('Listening on http://localhost:8888/login'));
-app.get('/top-tracks', async (req, res) => {
-  const { access_token } = req.query;
-
-  const topTracks = await getTopTracks(access_token);
+  // Fetch top tracks
+  const tracksResponse = await fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=5', {
+    headers: { Authorization: `Bearer ${access_token}` }
+  });
+  const tracksData = await tracksResponse.json();
 
   res.json({
-    topTracks: topTracks.map(track => ({
-      name: track.name,
-      artists: track.artists.map(artist => artist.name).join(', '),
-      album: track.album.name,
-      preview_url: track.preview_url
-    }))
+    user: userData,
+    tracks: tracksData.items,
   });
 });
-async function getTopTracks(access_token) {
-  const response = await fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=5', {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${access_token}`
-    }
-  });
-  const data = await response.json();
-  return data.items; // Return the array of top tracks
-}
-
 
 //BOBATEA.JS
 
