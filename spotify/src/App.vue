@@ -14,7 +14,6 @@ onMounted(async () => {
     user.value = data.user
     topTracks.value = data.tracks
   }
-  
 })
 
 const loginWithSpotify = () => {
