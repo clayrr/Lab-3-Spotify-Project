@@ -6,18 +6,28 @@ const topTracks = ref([])
 
 onMounted(async () => {
   const params = new URLSearchParams(window.location.search)
-  const code = params.get('code')
+  const access_token = params.get('access_token')
 
-  if (code) {
-    const res = await fetch(`http://localhost:8888/login?code=${code}`)
-    const data = await res.json()
-    user.value = data.user
-    topTracks.value = data.tracks
+  if (access_token) {
+    // Fetch user profile
+    const userRes = await fetch('https://api.spotify.com/v1/me', {
+      headers: { Authorization: `Bearer ${access_token}` }
+    });
+    const userData = await userRes.json();
+    user.value = userData;
+
+    // Fetch top tracks
+    const tracksRes = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=5', {
+      headers: { Authorization: `Bearer ${access_token}` }
+    });
+    const tracksData = await tracksRes.json();
+    topTracks.value = tracksData.items;
   }
-})
+});
+
 
 const loginWithSpotify = () => {
-  window.location.href = 'http://localhost:8888/login'
+  window.location.href = 'http://localhost:5173/login'
 }
 </script>
 
