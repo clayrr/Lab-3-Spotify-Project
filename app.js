@@ -27,9 +27,9 @@ app.get('/login', (req, res) => {
 // Spotify redirection
 // In your /callback handler:
 app.get('/callback', async (req, res) => {
-  const { code } = req.query;
+  const { code } = req.query; // Authorization code
 
-  // Exchange code for tokens
+  // Authorization code exchange for access and refresh tokens
   const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -42,14 +42,19 @@ app.get('/callback', async (req, res) => {
       grant_type: 'authorization_code'
     })
   });
-
   const tokenData = await tokenResponse.json();
-  const { access_token } = tokenData;
+  const { access_token, refresh_token } = tokenData;
 
-  // Redirect to your frontend with the token in the URL
-  res.redirect(`http://localhost:8888/?access_token=${access_token}`);
+  // Fetch user info
+  const userResponse = await fetch('https://api.spotify.com/v1/me', {
+    headers: { 'Authorization': `Bearer ${access_token}` }
+  });
+
+  const userData = await userResponse.json();
+  console.log('User data:', userData);
+
+  res.json(userData);
 });
-
 
 app.listen(8888, () => console.log('Listening on http://localhost:8888/login'));
 app.get('/top-tracks', async (req, res) => {
