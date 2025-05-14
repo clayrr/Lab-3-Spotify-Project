@@ -6,7 +6,6 @@ import querystring from 'querystring';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-
 const client_id =  process.env.SPOTIFY_CLIENT_ID;
 const client_secret =  process.env.SPOTIFY_CLIENT_SECRET;
 console.log("client_id is: ", client_id);
@@ -205,4 +204,3 @@ app.get('/season', (req, res) => {
     message: `Based on your music taste, ${seasonMessage}`
   });
 });
-
