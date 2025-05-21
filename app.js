@@ -57,6 +57,8 @@ app.get('/callback', async (req, res) => {
 
     const tokenData = await tokenResponse.json();
     const access_token = tokenData.access_token;
+    console.log("Access token:", access_token);
+
 
     if (!access_token) {
       return res.status(500).send('No access token received');
