@@ -1,3 +1,5 @@
+
+
 //BOBATEA.JS
 
 //  artist data; simulated numbers
@@ -120,3 +122,5 @@ const artists = [
       message: `Based on your music taste, ${seasonMessage}`
     });
   });
+  
+  

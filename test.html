@@ -1,0 +1,16 @@
+/ Add this to your Express backend file
+app.get('/music-metrics', async (req, res) => {
+  const { access_token } = req.query;
+  
+  // You can replace these with real calculations from Spotify API
+  // Using your existing hardcoded values for now
+  const energyLevel = matchEnergyLevel(energy);
+  const seasonMessage = matchDanceabilityToSeason(danceability);
+  const popularityScore = suggestBobaTea(artists);
+  
+  res.json({
+    energy: energyLevel,
+    danceability: seasonMessage,
+    popularity: popularityScore
+  });
+});

@@ -6,29 +6,25 @@ import querystring from 'querystring';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const client_id =  process.env.SPOTIFY_CLIENT_ID;
-const client_secret =  process.env.SPOTIFY_CLIENT_SECRET;
+const client_id = process.env.SPOTIFY_CLIENT_ID;
+const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 console.log("client_id is: ", client_id);
 const redirect_uri = 'http://localhost:8888/callback';
 
-// Direct to Spotify login page
 app.get('/login', (req, res) => {
   const authUrl = 'https://accounts.spotify.com/authorize?' + querystring.stringify({
     response_type: 'code',
     client_id: client_id,
-    scope: 'user-read-private user-read-email',
+    scope: 'user-read-private user-read-email user-top-read',
     redirect_uri: redirect_uri,
   });
 
   res.redirect(authUrl);
 });
 
-// Spotify redirection
-// In your /callback handler:
 app.get('/callback', async (req, res) => {
-  const { code } = req.query; // Authorization code
+  const { code } = req.query;
 
-  // Authorization code exchange for access and refresh tokens
   const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -41,10 +37,12 @@ app.get('/callback', async (req, res) => {
       grant_type: 'authorization_code'
     })
   });
+
   const tokenData = await tokenResponse.json();
   const { access_token, refresh_token } = tokenData;
 
-  // Fetch user info
+  console.log('Access token:', access_token);
+
   const userResponse = await fetch('https://api.spotify.com/v1/me', {
     headers: { 'Authorization': `Bearer ${access_token}` }
   });
@@ -56,9 +54,9 @@ app.get('/callback', async (req, res) => {
 });
 
 app.listen(8888, () => console.log('Listening on http://localhost:8888/login'));
+
 app.get('/top-tracks', async (req, res) => {
   const { access_token } = req.query;
-
   const topTracks = await getTopTracks(access_token);
 
   res.json({
@@ -70,6 +68,7 @@ app.get('/top-tracks', async (req, res) => {
     }))
   });
 });
+
 async function getTopTracks(access_token) {
   const response = await fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=5', {
     method: 'GET',
@@ -78,129 +77,221 @@ async function getTopTracks(access_token) {
     }
   });
   const data = await response.json();
-  return data.items; // Return the array of top tracks
+  return data.items;
 }
 
+async function getTopArtists(access_token) {
+  const r = await fetch(
+    'https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=10',
+    { headers: { Authorization: `Bearer ${access_token}` } }
+  );
+  const json = await r.json();
+  return json.items;
+}
 
-//BOBATEA.JS
+async function getAudioFeatures(access_token, ids) {
+  const r = await fetch(
+    `https://api.spotify.com/v1/audio-features?ids=${ids.join(',')}`,
+    { headers: { Authorization: `Bearer ${access_token}` } }
+  );
+  const json = await r.json();
+  return json.audio_features;
+}
 
-//  artist data; simulated numbers
-const artists = [
-  { name: "Artist 1", popularity: 15 },
-  { name: "Artist 2", popularity: 34 },
-  { name: "Artist 3", popularity: 51 },
-  { name: "Artist 4", popularity: 73 },
-  { name: "Artist 5", popularity: 6 },
-  { name: "Artist 6", popularity: 101 },
-  { name: "Artist 7", popularity: 2 },
-  { name: "Artist 8", popularity: 22 },
-  { name: "Artist 9", popularity: 15 },
-  { name: "Artist 10", popularity: 78 },
-  { name: "Artist 11", popularity: 3 },
-];
+async function getTopTracksWithFeatures(access_token) {
+  const top = await getTopTracks(access_token);
+  const ids = top.map(t => t.id);
+  const feats = await getAudioFeatures(access_token, ids);
+  return feats;
+}
 
-// tea options 
-const teas = {
-  leastBasic: ["Red Velvet Tea", "Toffee Tea"],
-  slightlyBasic: ["Mango Green Foam Tea", "Cheese Foam Tea"],
-  moreBasic: ["Matcha Latte", "Taro Milk Tea"],
-  mostBasic: ["Brown Sugar Milk Tea", "Classic Milk Tea"],
-};
-
-// function to determine the tea recommendation 
 function suggestBobaTea(artists) {
-  // sort artists by monthly listeners (descending order)
-  const topArtists = artists.sort((a, b) => b.popularity - a.popularity).slice(0, 10);
+  if (!artists.length) return 'classic milk tea';
 
-  // calculate the total popularity score based on listening count ranges
-  let score = 0;
+  const avgPopularity = artists.reduce((sum, artist) => sum + artist.popularity, 0) / artists.length;
 
-  // categorize each artist by their listening count and assign a "popularity score"
-  topArtists.forEach((artist) => {
-    if (artist.popularity <= 20) {
-      score += 0;  // least basic
-    } else if (artist.popularity <= 40) {
-      score += 1;  // a bit basic
-    } else if (artist.popularity <= 60) {
-      score += 2;  // more basic
-    } else if (artist.popularity <= 80) {
-      score += 3;  // more basic
-    } else {
-      score += 4;  // most basic
+  if (avgPopularity > 80) return 'Thai tea with boba';
+  if (avgPopularity > 60) return 'brown sugar milk tea';
+  if (avgPopularity > 40) return 'jasmine green milk tea';
+  return 'oolong milk tea with grass jelly';
+}
+
+// --- /bubbletea endpoint ---
+app.get('/bubbletea', async (req, res) => {
+  const access_token = req.query.access_token;
+  if (!access_token) {
+    return res.status(400).json({ error: 'Missing access token' });
+  }
+
+  try {
+    const response = await fetch(
+      'https://api.spotify.com/v1/me/top/artists?limit=10&time_range=medium_term',
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Spotify artist request failed:', errorText);
+      return res.status(500).json({ error: 'Failed to fetch top artists from Spotify' });
     }
-  });
 
-  // average score (based on top 10 artists)
-  const averagePopularity = score / topArtists.length;
+    const data = await response.json();
+    const artists = (data.items || []).map(artist => ({
+      name: artist.name,
+      popularity: artist.popularity
+    }));
 
-  // suggest tea based on average popularity score
-  if (averagePopularity <= 1) {  // least basic 
-    return teas.leastBasic[Math.floor(Math.random() * teas.leastBasic.length)];
-  } else if (averagePopularity <= 2) {  // a bit basic
-    return teas.slightlyBasic[Math.floor(Math.random() * teas.slightlyBasic.length)];
-  } else if (averagePopularity <= 3) {  // more basic
-    return teas.moreBasic[Math.floor(Math.random() * teas.moreBasic.length)];
-  } else {  // most basic
-    return teas.mostBasic[Math.floor(Math.random() * teas.mostBasic.length)];
+    function suggestBobaTea(artists) {
+      if (!artists.length) return 'classic milk tea';
+      const avgPopularity = artists.reduce((sum, artist) => sum + artist.popularity, 0) / artists.length;
+      if (avgPopularity > 80) return 'Thai tea with boba';
+      if (avgPopularity > 60) return 'brown sugar milk tea';
+      if (avgPopularity > 40) return 'jasmine green milk tea';
+      return 'oolong milk tea with grass jelly';
+    }
+
+    const drinkRecommendation = suggestBobaTea(artists);
+
+    res.json({
+      message: `Based on your top artists, we suggest you try ${drinkRecommendation}! Enjoy! 🧋`
+    });
+  } catch (err) {
+    console.error('Error in /bubbletea:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-}
-
-// bubble tea endpoint
-app.get('/bubbletea', (req, res) => {
-  const drinkRecommendation = suggestBobaTea(artists);
-
-  res.json({
-    message: `Based on your top artists, we suggest you try ${drinkRecommendation}! Enjoy! 🧋`
-  });
 });
 
-//AUDIO.JS
-const energy = 0.5;
-
-function matchEnergyLevel(energy) {
-  if (energy < 0.25) {
-    return 'Low energy)';
-  } else if (energy < 0.5) {
-    return 'Moderately low energy)';
-  } else if (energy < 0.75) {
-    return 'Moderate energy)';
-  } else {
-    return 'High energy)';
+// --- /track-energy endpoint ---
+app.get('/track-energy', async (req, res) => {
+  const access_token = req.query.access_token;
+  if (!access_token) {
+    return res.status(400).json({ error: 'Missing access token' });
   }
-}
 
-// endpoint
-app.get('/track-energy', (req, res) => {
-  const energyLevel = matchEnergyLevel(energy);
+  try {
+    const topTracksResponse = await fetch(
+      'https://api.spotify.com/v1/me/top/tracks?limit=5&time_range=medium_term',
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    );
 
-  res.json({
-    message: `Based on your music taste, we have concluded that you have ${energyLevel}.`
-  });
+    if (!topTracksResponse.ok) {
+      const errorText = await topTracksResponse.text();
+      console.error('Spotify tracks request failed:', errorText);
+      return res.status(500).json({ error: 'Failed to fetch top tracks' });
+    }
+
+    const topTracksData = await topTracksResponse.json();
+    const trackIds = (topTracksData.items || []).map(track => track.id);
+
+    if (!trackIds.length) {
+      return res.status(200).json({ message: 'No top tracks found.' });
+    }
+
+    const audioFeaturesResponse = await fetch(
+      `https://api.spotify.com/v1/audio-features?ids=${trackIds.join(',')}`,
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    );
+
+    if (!audioFeaturesResponse.ok) {
+      const errorText = await audioFeaturesResponse.text();
+      console.error('Spotify audio features request failed:', errorText);
+      return res.status(500).json({ error: 'Failed to fetch audio features' });
+    }
+
+    const audioData = await audioFeaturesResponse.json();
+    const energies = (audioData.audio_features || [])
+      .filter(f => f && typeof f.energy === 'number')
+      .map(f => f.energy);
+
+    if (!energies.length) {
+      return res.status(200).json({ message: 'No audio features found for your top tracks.' });
+    }
+
+    const averageEnergy = energies.reduce((a, b) => a + b, 0) / energies.length;
+    let energyLabel;
+    if (averageEnergy < 0.25) {
+      energyLabel = 'Low energy';
+    } else if (averageEnergy < 0.5) {
+      energyLabel = 'Moderately low energy';
+    } else if (averageEnergy < 0.75) {
+      energyLabel = 'Moderate energy';
+    } else {
+      energyLabel = 'High energy';
+    }
+
+    res.json({
+      message: `Based on your music taste, you have ${energyLabel}.`
+    });
+  } catch (err) {
+    console.error('Error in /track-energy:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-//SEASONS.JS
-
-// simulated value for demonstration
-const danceability = 0.79;
-
-// helper function to classify danceability into seasons with descriptive messages
-function matchDanceabilityToSeason(danceability) {
-  if (danceability < 0.25) {
-    return 'your music vibe is like winter: calm, and introspective. You are like a cup of hot chocolate on a snow day';
-  } else if (danceability < 0.5) {
-    return 'your music vibe is like autumn: mellow and reflective. You are like drinking a cup of hot apple cider in a pumpkin patch';
-  } else if (danceability < 0.75) {
-    return 'your music vibe is like spring: fresh and lively. You are like drinking herbal tea in a meadow';
-  } else {
-    return 'your music vibe is like summer: vibrant and energetic. You are like drinking lemonade by the pool';
+// --- /season endpoint ---
+app.get('/season', async (req, res) => {
+  const access_token = req.query.access_token;
+  if (!access_token) {
+    return res.status(400).json({ error: 'Missing access token' });
   }
-}
 
-// danceability to season endpoint
-app.get('/season', (req, res) => {
-  const seasonMessage = matchDanceabilityToSeason(danceability);
+  try {
+    const topTracksResponse = await fetch(
+      'https://api.spotify.com/v1/me/top/tracks?limit=5&time_range=medium_term',
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    );
 
-  res.json({
-    message: `Based on your music taste, ${seasonMessage}`
-  });
+    if (!topTracksResponse.ok) {
+      const errorText = await topTracksResponse.text();
+      console.error('Spotify top tracks failed:', errorText);
+      return res.status(500).json({ error: 'Failed to fetch top tracks' });
+    }
+
+    const topTracksData = await topTracksResponse.json();
+    const trackIds = (topTracksData.items || []).map(track => track.id);
+
+    if (!trackIds.length) {
+      return res.status(200).json({ message: 'No top tracks found.' });
+    }
+
+    const audioFeaturesResponse = await fetch(
+      `https://api.spotify.com/v1/audio-features?ids=${trackIds.join(',')}`,
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    );
+
+    if (!audioFeaturesResponse.ok) {
+      const errorText = await audioFeaturesResponse.text();
+      console.error('Spotify audio features request failed:', errorText);
+      return res.status(500).json({ error: 'Failed to fetch audio features' });
+    }
+
+    const audioData = await audioFeaturesResponse.json();
+    const danceabilities = (audioData.audio_features || [])
+      .filter(f => f && typeof f.danceability === 'number')
+      .map(f => f.danceability);
+
+    if (!danceabilities.length) {
+      return res.status(200).json({ message: 'No audio features found for your top tracks.' });
+    }
+
+    const averageDanceability = danceabilities.reduce((a, b) => a + b, 0) / danceabilities.length;
+
+    let seasonMessage;
+    if (averageDanceability < 0.25) {
+      seasonMessage = 'your music vibe is like winter: calm and introspective. You are like a cup of hot chocolate on a snow day.';
+    } else if (averageDanceability < 0.5) {
+      seasonMessage = 'your music vibe is like autumn: mellow and reflective. You are like drinking hot apple cider in a pumpkin patch.';
+    } else if (averageDanceability < 0.75) {
+      seasonMessage = 'your music vibe is like spring: fresh and lively. You are like drinking herbal tea in a meadow.';
+    } else {
+      seasonMessage = 'your music vibe is like summer: vibrant and energetic. You are like drinking lemonade by the pool.';
+    }
+
+    res.json({
+      message: `Based on your music taste, ${seasonMessage}`
+    });
+  } catch (err) {
+    console.error('Error in /season:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
