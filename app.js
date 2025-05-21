@@ -135,9 +135,9 @@ app.get('/track-energy', async (req, res) => {
   const avgPopularity = data.items.reduce((sum, artist) => sum + artist.popularity, 0) / data.items.length;
 
   let energyLabel = '';
-  if (avgPopularity < 30) energyLabel = 'Low energy';
-  else if (avgPopularity < 60) energyLabel = 'Moderate energy';
-  else energyLabel = 'High energy';
+  if (avgPopularity < 30) energyLabel = 'low energy. drink some red bull';
+  else if (avgPopularity < 60) energyLabel = 'moderate energy. tew calm';
+  else energyLabel = 'higb energy. sugar rush core';
 
   res.json({ message: `based on your top artists, your music energy is: ${energyLabel}.` });
 });
@@ -165,9 +165,9 @@ app.get('/season', async (req, res) => {
   });
 
   let seasonMsg = '';
-  if (winterGenres > summerGenres) seasonMsg = 'your music vibe is like winter: calm and introspective.';
-  else if (summerGenres > winterGenres) seasonMsg = 'your music vibe is like summer: vibrant and energetic.';
-  else seasonMsg = 'your music vibe is balanced and versatile.';
+  if (winterGenres > summerGenres) seasonMsg = 'your music vibe is like winter: you are cold like the arctic tundra.';
+  else if (summerGenres > winterGenres) seasonMsg = 'your music vibe is like summer: if overheating and fainting was a person, it would be you.';
+  else seasonMsg = 'your music vibe is balanced and versatile. you are too in-the-middle to be anything. #notliketheothergirls';
 
   res.json({ message: `based on your top artists, ${seasonMsg}` });
 });
