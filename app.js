@@ -7,7 +7,7 @@ import querystring from 'querystring';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-// allow frontend origin to call  backend
+// allow frontend origin to call backend
 app.use(cors({
   origin: 'http://localhost:5173',
 }));
@@ -74,31 +74,12 @@ app.get('/callback', async (req, res) => {
 app.listen(8888, () => console.log('Listening on http://localhost:8888/login'));
 
 
-async function getTopArtists(access_token) {
-  const r = await fetch(
-    'https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=10',
-    { headers: { Authorization: `Bearer ${access_token}` } }
-  );
-  const json = await r.json();
-  return json.items;
-}
-
-function suggestBobaTea(artists) {
-  if (!artists.length) return 'classic milk tea';
-
-  const avgPopularity = artists.reduce((sum, artist) => sum + artist.popularity, 0) / artists.length;
-
-  if (avgPopularity > 80) return 'Thai tea with boba';
-  if (avgPopularity > 60) return 'brown sugar milk tea';
-  if (avgPopularity > 40) return 'jasmine green milk tea';
-  return 'oolong milk tea with grass jelly';
-}
 
 // bubbletea endpoint 
 app.get('/bubbletea', async (req, res) => {
   const access_token = req.query.access_token;
   if (!access_token) {
-    return res.status(400).json({ error: 'Missing access token' });
+    return res.status(400).json({ error: 'missing access token' });
   }
 
   try {
@@ -109,8 +90,8 @@ app.get('/bubbletea', async (req, res) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Spotify artist request failed:', errorText);
-      return res.status(500).json({ error: 'Failed to fetch top artists from Spotify' });
+      console.error('spotify artist request failed:', errorText);
+      return res.status(500).json({ error: 'failed to fetch top artists from Spotify' });
     }
 
     const data = await response.json();
@@ -122,7 +103,7 @@ app.get('/bubbletea', async (req, res) => {
     function suggestBobaTea(artists) {
       if (!artists.length) return 'classic milk tea';
       const avgPopularity = artists.reduce((sum, artist) => sum + artist.popularity, 0) / artists.length;
-      if (avgPopularity > 80) return 'Thai tea with boba';
+      if (avgPopularity > 80) return 'thai tea with boba';
       if (avgPopularity > 60) return 'brown sugar milk tea';
       if (avgPopularity > 40) return 'jasmine green milk tea';
       return 'oolong milk tea with grass jelly';
@@ -131,7 +112,7 @@ app.get('/bubbletea', async (req, res) => {
     const drinkRecommendation = suggestBobaTea(artists);
 
     res.json({
-      message: `Based on your top artists, we suggest you try ${drinkRecommendation}! Enjoy! 🧋`
+      message: `based on your top artists, we suggest you try ${drinkRecommendation}! enjoy! 🧋🧋🧋🧋🧋`
     });
   } catch (err) {
     console.error('Error in /bubbletea:', err);
@@ -158,13 +139,13 @@ app.get('/track-energy', async (req, res) => {
   else if (avgPopularity < 60) energyLabel = 'Moderate energy';
   else energyLabel = 'High energy';
 
-  res.json({ message: `Based on your top artists, your music energy is: ${energyLabel}.` });
+  res.json({ message: `based on your top artists, your music energy is: ${energyLabel}.` });
 });
 
 //season endpoint
 app.get('/season', async (req, res) => {
   const access_token = req.query.access_token;
-  if (!access_token) return res.status(400).json({ error: 'Missing access token' });
+  if (!access_token) return res.status(400).json({ error: 'missing access token' });
 
   const response = await fetch('https://api.spotify.com/v1/me/top/artists?limit=10&time_range=medium_term', {
     headers: { Authorization: `Bearer ${access_token}` }
@@ -188,5 +169,5 @@ app.get('/season', async (req, res) => {
   else if (summerGenres > winterGenres) seasonMsg = 'your music vibe is like summer: vibrant and energetic.';
   else seasonMsg = 'your music vibe is balanced and versatile.';
 
-  res.json({ message: `Based on your top artists, ${seasonMsg}` });
+  res.json({ message: `based on your top artists, ${seasonMsg}` });
 });
