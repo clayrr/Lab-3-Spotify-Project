@@ -170,7 +170,7 @@ app.get('/season', async (req, res) => {
 
   let seasonMsg = '';
   if (winterGenres > summerGenres && winterGenres > fallGenres && winterGenres > springGenres) seasonMsg = 'your music vibe is like winter: you are cold like the arctic tundra.';
-  else if (summerGenres > winterGenres && summerGenres > springGenres && winterGenres > fallGenres) seasonMsg = 'your music vibe is like summer: if overheating and fainting was a person, it would be you.';
+  else if (summerGenres > winterGenres && summerGenres > springGenres && summerGenres > fallGenres) seasonMsg = 'your music vibe is like summer: if overheating and fainting was a person, it would be you.';
   else if (fallGenres > summerGenres && fallGenres > winterGenres && fallGenres > springGenres) seasonMsg = 'your music vibe is like fall: you take pride in your pumpkin spice latte addiction.';
   else if (springGenres > summerGenres && springGenres > fallGenres && springGenres > summerGenres) seasonMsg = 'your music vibe is like spring: your taste is refreshing.';
   else seasonMsg = 'your music vibe is balanced and versatile. you are too in-the-middle to be anything. #notliketheothergirls';
