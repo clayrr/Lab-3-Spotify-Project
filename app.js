@@ -12,8 +12,8 @@ app.use(cors({
   origin: 'http://localhost:5173',
 }));
 
-const client_id = process.env.SPOTIFY_CLIENT_ID;
-const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+const client_id = "ba88f3191dc94daea8320aa3e0ee3f4c";
+const client_secret = "467deef8549046e584bfc02542552aa4";
 console.log("client_id is: ", client_id);
 const redirect_uri = 'http://localhost:8888/callback';
 
@@ -74,8 +74,6 @@ app.get('/callback', async (req, res) => {
 
 
 app.listen(8888, () => console.log('Listening on http://localhost:8888/login'));
-
-
 
 // bubbletea endpoint 
 app.get('/bubbletea', async (req, res) => {
@@ -158,17 +156,23 @@ app.get('/season', async (req, res) => {
   // genres that might hint at seasons, super simple example:
   let winterGenres = 0;
   let summerGenres = 0;
+  let fallGenres = 0;
+  let springGenres = 0; 
 
   data.items.forEach(artist => {
     const genres = artist.genres.join(' ').toLowerCase();
 
     if (genres.includes('ambient') || genres.includes('classical') || genres.includes('chill')) winterGenres++;
     if (genres.includes('pop') || genres.includes('dance') || genres.includes('electronic')) summerGenres++;
+    if (genres.includes('r&b') || genres.includes('jazz') || genres.includes('bossa nova')) fallGenres++;
+    if (genres.includes('lo-fi') || genres.includes('soundtrack') || genres.includes('indie')) springGenres++;
   });
 
   let seasonMsg = '';
-  if (winterGenres > summerGenres) seasonMsg = 'your music vibe is like winter: you are cold like the arctic tundra.';
-  else if (summerGenres > winterGenres) seasonMsg = 'your music vibe is like summer: if overheating and fainting was a person, it would be you.';
+  if (winterGenres > summerGenres && winterGenres > fallGenres && winterGenres > springGenres) seasonMsg = 'your music vibe is like winter: you are cold like the arctic tundra.';
+  else if (summerGenres > winterGenres && summerGenres > springGenres && winterGenres > fallGenres) seasonMsg = 'your music vibe is like summer: if overheating and fainting was a person, it would be you.';
+  else if (fallGenres > summerGenres && fallGenres > winterGenres && fallGenres > springGenres) seasonMsg = 'your music vibe is like fall: you take pride in your pumpkin spice latte addiction.';
+  else if (springGenres > summerGenres && springGenres > fallGenres && springGenres > summerGenres) seasonMsg = 'your music vibe is like spring: your taste is refreshing.';
   else seasonMsg = 'your music vibe is balanced and versatile. you are too in-the-middle to be anything. #notliketheothergirls';
 
   res.json({ message: `based on your top artists, ${seasonMsg}` });
