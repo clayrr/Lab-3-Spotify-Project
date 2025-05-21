@@ -139,7 +139,7 @@ app.get('/track-energy', async (req, res) => {
   let energyLabel = '';
   if (avgPopularity < 30) energyLabel = 'low energy. drink some red bull';
   else if (avgPopularity < 60) energyLabel = 'moderate energy. tew calm';
-  else energyLabel = 'higb energy. sugar rush core';
+  else energyLabel = 'high energy. sugar rush core';
 
   res.json({ message: `based on your top artists, your music energy is: ${energyLabel}.` });
 });
