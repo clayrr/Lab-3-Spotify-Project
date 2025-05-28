@@ -19,6 +19,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@canvasjs/vue-charts": "^1.0.4",
     "@types/node-fetch": "^2.6.12",
     "axios": "^1.7.9",
     "cors": "^2.8.5",

@@ -80,19 +80,21 @@ const options = ref({
 */
 
 onMounted(() => {
+  let token = null;
   const hash = window.location.hash;
   if (hash) {
     const params = new URLSearchParams(hash.substring(1));
-    const token = params.get('access_token');
-    if (token) {
-      accessToken.value = token;
-     //i found this on the internet --> it said clean the url --> must ask ms feng
-      window.history.replaceState(null, null, window.location.pathname);
-
-      // fetch spotify user data and backend recommendations
-      fetchSpotifyUser(token);
-      fetchBackendData(token);
-    }
+    token = params.get('access_token');
+  }
+  if (!token) {
+    const params = new URLSearchParams(window.location.search);
+    token = params.get('access_token');
+  }
+  if (token) {
+    accessToken.value = token;
+    window.history.replaceState(null, null, window.location.pathname);
+    fetchSpotifyUser(token);
+    fetchBackendData(token);
   }
 });
 </script>

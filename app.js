@@ -12,8 +12,8 @@ app.use(cors({
   origin: 'http://localhost:5173',
 }));
 
-const client_id = "ba88f3191dc94daea8320aa3e0ee3f4c";
-const client_secret = "467deef8549046e584bfc02542552aa4";
+const client_id = process.env.SPOTIFY_CLIENT_ID;
+const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 console.log("client_id is: ", client_id);
 const redirect_uri = 'http://localhost:8888/callback';
 
