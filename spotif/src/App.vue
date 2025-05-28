@@ -46,6 +46,38 @@ async function fetchBackendData(token) {
     console.error(err);
   }
 }
+/*
+this stuff is supposed to make a bar chart but it doesn't work. 
+need to npm install @canvasjs/vue-charts
+i already put this in the main.js file
+but we need to put the data in properly and have the chart show up on the website. 
+the code below is a template. 
+https://canvasjs.com/vuejs-charts/bar-chart-category-axis/
+
+const options = ref({
+  animationEnabled: true,
+  exportEnabled: true,
+  title:{
+    text: "Chart title"
+  },
+  axisX: {
+    labelTextAlign: "right"
+  },
+  axisY: {
+    title: "iasdf",
+    suffix: "ds"
+  },
+  data: [{
+    type: "bar",
+    yValueFormatString: "#,###M tonnes",
+    dataPoints: [
+      { label: "genre1", y: 3 },
+      { label: "genre2", y: 18 },
+      { label: "genre3", y: 27 },
+    ]
+  }]
+});
+*/
 
 onMounted(() => {
   const hash = window.location.hash;
