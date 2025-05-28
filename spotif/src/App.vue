@@ -73,7 +73,7 @@ onMounted(() => {
 
     <div v-if="!accessToken">
       <p>please log in to access your personalized music data. yay!</p>
-      <a href="http://localhost:8888/login" style="text-decoration: none; background: #1db954; color: white; padding: 10px 20px; border-radius: 25px;">Log in with Spotify</a>
+      <a href="http://localhost:8888/login" style="text-decoration: none; background: #1db954; color: white; padding: 10px 20px; border-radius: 25px; display: inline-block; margin-top: 1em;">Log in with Spotify</a>
     </div>
 
     <div v-else-if="!userData">
