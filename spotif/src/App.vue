@@ -101,7 +101,6 @@ onMounted(() => {
 
 <template>
   <div class="container" style="max-width: 600px; margin: auto; font-family: Arial, sans-serif;">
-    <h1>hi! this is maya, claire, and helena. welcome to your spotify wrapped! its only may but pls ignore it.</h1>
 
     <div v-if="errorMsg" style="color: red; margin-bottom: 1em;">{{ errorMsg }}</div>
 
@@ -119,7 +118,7 @@ onMounted(() => {
       <p><strong>email:</strong> {{ userData.email }}</p>
       <img :src="userData.images[0]?.url" alt="Profile Picture" style="width:100px; border-radius: 50%; margin-bottom: 1em;" />
 
-      <div style="background: #f1f1f1; padding: 1em; border-radius: 10px; margin-top: 1em;">
+      <div style="background: #1DB954; padding: 1em; border-radius: 10px; margin-top: 1em;">
         <h3>your recommendations</h3>
         <p><strong>boba tea suggestion:</strong> {{ bobaTea }}</p>
         <p><strong>music energy level:</strong> {{ energy }}</p>
