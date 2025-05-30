@@ -11,7 +11,7 @@ A web application that analyzes Spotify data and provides interactive features i
 
 ### 1. Environment Configuration
 
-Create a `.env` file in the root directory with the Spotify API credentials (provided separately via email).
+Create a `.env` file in the "big" folder with the Spotify API credentials (provided separately via email).
 
 ### 2. Backend Setup
 
