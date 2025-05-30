@@ -72,6 +72,7 @@ onMounted(() => {
 <template>
   <div class="container" style="max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
     <div v-if="errorMsg" style="color: red; margin-bottom: 1em;">{{ errorMsg }}</div>
+    
     <!-- tells user to log in-->
     <div v-if="!accessToken">
       <p>please log in to access your personalized music data. yay!</p>
