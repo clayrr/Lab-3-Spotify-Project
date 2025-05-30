@@ -1,6 +1,6 @@
 # Maya, Helena, and Claire - Spotify Analysis Project
 
-A web application that analyzes Spotify data and provides interactive features including boba tea discovery, decade-based artist exploration, and seasons identification.
+An application that analyzes Spotify data and provides interactive features including boba tea discovery, decade-based artist exploration, seasons identification, and energy identification. 
 
 ## Prerequisites
 
