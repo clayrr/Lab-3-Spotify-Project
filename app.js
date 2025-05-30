@@ -12,11 +12,13 @@ app.use(cors({
   origin: 'http://localhost:5173',
 }));
 
+//variables for Spotify
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 console.log("client_id is: ", client_id);
 const redirect_uri = 'http://localhost:8888/callback';
 
+// Spotify login endpoint
 app.get('/login', (req, res) => {
   const authUrl = 'https://accounts.spotify.com/authorize?' + querystring.stringify({
     response_type: 'code',
@@ -72,10 +74,10 @@ app.get('/callback', async (req, res) => {
   }
 });
 
-
+// Start the server
 app.listen(8888, () => console.log('Listening on http://localhost:8888/login'));
 
-// bubbletea endpoint 
+// bubbletea endpoint - suggests bubble tea based on top artists
 app.get('/bubbletea', async (req, res) => {
   const access_token = req.query.access_token;
   if (!access_token) {
@@ -83,6 +85,7 @@ app.get('/bubbletea', async (req, res) => {
   }
 
   try {
+    // Fetch top artists from Spotify
     const response = await fetch(
       'https://api.spotify.com/v1/me/top/artists?limit=10&time_range=medium_term',
       { headers: { Authorization: `Bearer ${access_token}` } }
@@ -99,7 +102,7 @@ app.get('/bubbletea', async (req, res) => {
       name: artist.name,
       popularity: artist.popularity
     }));
-
+    //uses popularity to suggest bubble tea
     function suggestBobaTea(artists) {
       if (!artists.length) return 'classic milk tea';
       const avgPopularity = artists.reduce((sum, artist) => sum + artist.popularity, 0) / artists.length;
