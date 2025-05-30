@@ -63,5 +63,5 @@ The application includes the following interactive features:
 2. Open your browser and navigate to the local development URL
 3. Log in with your Spotify account
 4. Explore the various features using the navigation bar
-5. Enjoy dthe application!
+5. Enjoy the application!
 
