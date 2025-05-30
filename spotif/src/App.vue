@@ -83,7 +83,7 @@ onMounted(() => {
       <p>loading your spotify data...</p>
     </div>
     
-    <!-- displays users name, profile picture, and recommendations based on data-->
+    <!-- displays usersname, profile picture, and recommendations based on data-->
     <div v-else>
       <h2>hello, {{ userData.display_name }}!</h2>
       <p><strong>email:</strong> {{ userData.email }}</p>

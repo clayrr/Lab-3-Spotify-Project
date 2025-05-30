@@ -19,7 +19,7 @@
     </div>
     <!-- error message -> you did something wrong! -->
     <div v-else class="text-center">
-      <p class="text-gray-600">No boba recommendation found. Please check your Spotify integration.</p>
+      <p class="text-gray-600">no boba recommendation found. please check your Spotify integration.</p>
     </div>
   </div>
 </template>
