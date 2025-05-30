@@ -15,7 +15,6 @@ app.use(cors({
 //variables for Spotify
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-console.log("client_id is: ", client_id);
 const redirect_uri = 'http://localhost:8888/callback';
 
 // Spotify login endpoint
@@ -30,6 +29,7 @@ app.get('/login', (req, res) => {
   res.redirect(authUrl);
 });
 
+//callback endpoint, gets access token 
 app.get('/callback', async (req, res) => {
   const { code } = req.query;
 
@@ -52,6 +52,7 @@ app.get('/callback', async (req, res) => {
     });
 
     if (!tokenResponse.ok) {
+      //error message
       const errorText = await tokenResponse.text();
       console.error('Token fetch failed:', errorText);
       return res.status(500).send('Failed to fetch access token');
@@ -59,7 +60,6 @@ app.get('/callback', async (req, res) => {
 
     const tokenData = await tokenResponse.json();
     const access_token = tokenData.access_token;
-    console.log("Access token:", access_token);
 
 
     if (!access_token) {
@@ -69,29 +69,32 @@ app.get('/callback', async (req, res) => {
     res.redirect(`http://localhost:5173/#access_token=${access_token}`);
 
   } catch (err) {
+    //error message
     console.error('Callback error:', err);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Start the server
+// start the server
 app.listen(8888, () => console.log('Listening on http://localhost:8888/login'));
 
 // bubbletea endpoint - suggests bubble tea based on top artists
 app.get('/bubbletea', async (req, res) => {
   const access_token = req.query.access_token;
   if (!access_token) {
+    //error message
     return res.status(400).json({ error: 'missing access token' });
   }
 
   try {
-    // Fetch top artists from Spotify
+    // fetch top artists from Spotify
     const response = await fetch(
       'https://api.spotify.com/v1/me/top/artists?limit=10&time_range=medium_term',
       { headers: { Authorization: `Bearer ${access_token}` } }
     );
 
     if (!response.ok) {
+      // error message
       const errorText = await response.text();
       console.error('spotify artist request failed:', errorText);
       return res.status(500).json({ error: 'failed to fetch top artists from Spotify' });
@@ -102,7 +105,8 @@ app.get('/bubbletea', async (req, res) => {
       name: artist.name,
       popularity: artist.popularity
     }));
-    //uses popularity to suggest bubble tea
+
+    // uses popularity to suggest bubble tea
     function suggestBobaTea(artists) {
       if (!artists.length) return 'classic milk tea';
       const avgPopularity = artists.reduce((sum, artist) => sum + artist.popularity, 0) / artists.length;
@@ -118,12 +122,13 @@ app.get('/bubbletea', async (req, res) => {
       message: `based on your top artists, we suggest you try ${drinkRecommendation}! enjoy! 🧋🧋🧋🧋🧋`
     });
   } catch (err) {
+    // error message
     console.error('Error in /bubbletea:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-//energy endpoint
+// energy endpoint
 app.get('/track-energy', async (req, res) => {
   const access_token = req.query.access_token;
   if (!access_token) return res.status(400).json({ error: 'Missing access token' });
@@ -145,9 +150,10 @@ app.get('/track-energy', async (req, res) => {
   res.json({ message: `based on your top artists, your music energy is: ${energyLabel}.` });
 });
 
-//season endpoint
+// season endpoint
 app.get('/season', async (req, res) => {
   const access_token = req.query.access_token;
+  // error message
   if (!access_token) return res.status(400).json({ error: 'missing access token' });
 
   const response = await fetch('https://api.spotify.com/v1/me/top/artists?limit=10&time_range=medium_term', {
@@ -156,7 +162,7 @@ app.get('/season', async (req, res) => {
 
   const data = await response.json();
 
-  // genres that might hint at seasons, super simple example:
+  //  genres that might hint at seasons, super simple example:
   let winterGenres = 0;
   let summerGenres = 0;
   let fallGenres = 0;
@@ -180,3 +186,4 @@ app.get('/season', async (req, res) => {
 
   res.json({ message: `based on your top artists, ${seasonMsg}` });
 });
+

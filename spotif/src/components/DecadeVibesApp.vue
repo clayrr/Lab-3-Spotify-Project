@@ -1,4 +1,5 @@
 <template>
+  
     <div style="background: #121212; color: #fafafa; font-family: 'inter', sans-serif; max-width: 400px; margin: 2rem auto; padding: 1.5rem; border-radius: 8px;">
       <h2 style="text-transform: lowercase; font-weight: 600; margin-bottom: 1rem;">
         pick your decade artist

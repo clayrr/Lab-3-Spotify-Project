@@ -30,7 +30,7 @@ using -->
     }
 
     .hero-bg {
-      background: radial-gradient(circle at top left, #1db954 0%, #121212 40%, #000 100%); 
+      background: radial-gradient(circle at top left, #1db954 0%, #121212 40%, #000 100%);
     }
 
     .glass {
@@ -65,19 +65,39 @@ using -->
   </nav>
 
 
-<!-- how to use lucide: https://lucide.dev/guide/packages/lucide-react -->
+  <!-- how to use lucide: https://lucide.dev/guide/packages/lucide-react -->
+   <!-- tailwind typing animation: https://dev.to/lazysock/make-a-typewriter-effect-with-tailwindcss-in-5-minutes-dc-->
   <!-- all other information: https://www.creative-tim.com/twcomponents/cheatsheet and https://www.geeksforgeeks.org/tailwind-css/-->
   <!-- home -->
-  <section id="home" class="hero-bg h-screen flex flex-col justify-center items-center text-center px-6">
-    <h1 class="text-4xl sm:text-6xl font-extrabold mb-4 leading-tight">hi, welcome to your may spotify wrapped</h1>
-    <p class="text-lg sm:text-2xl max-w-2xl mb-8 text-gray-200">
-      discover your aura, get a custom boba pairing, and vibe with seasonal energy insights.
-    </p>
-    <a href="#wrapped"
-      class="inline-block px-8 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition">
-      enter!
-    </a>
-  </section>
+<section id="home" class="hero-bg h-screen flex flex-col justify-center items-center text-center px-6">
+  <h1 class="text-4xl sm:text-6xl font-extrabold mb-4 leading-tight whitespace-nowrap overflow-hidden border-r-4 border-white w-[0ch] animate-typing">
+    hi, welcome to your may spotify wrapped
+  </h1>
+  <p class="text-lg sm:text-2xl max-w-2xl mb-8 text-gray-200">
+    discover your aura, get a custom boba pairing, and vibe with seasonal energy insights.
+  </p>
+  <a href="#wrapped"
+    class="inline-block px-8 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition">
+    click here to enter!
+  </a>
+</section>
+
+<style>
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+
+  @keyframes blink {
+    0%, 100% { border-color: transparent }
+    50% { border-color: white }
+  }
+
+  .animate-typing {
+    animation: typing 3s steps(40, end), blink 0.75s step-end infinite;
+  }
+</style>
+
 
   <!-- wrapped (App.vue app here) -->
   <section id="wrapped" class="min-h-screen flex items-center justify-center py-4 px-4">
@@ -90,9 +110,6 @@ using -->
     <div id="decade-vibes-app" class="max-w-5xl mx-auto px-4"></div>
     <script type="module" src="/src/DecadeVibesMain.js"></script>
   </section>
-  
- 
-
 
   <!-- about -->
   <section id="about" class="py-24 ">
@@ -116,7 +133,8 @@ using -->
           <p class="text-gray-400">energy!</p>
         </div>
         <div class="text-center glass p-6 rounded-lg">
-          <img src="/images/claire.png" alt="claire" class="w-24 h-24 mx-auto rounded-full mb-4 object-cover object-center">
+          <img src="/images/claire.png" alt="claire"
+            class="w-24 h-24 mx-auto rounded-full mb-4 object-cover object-center">
           <h3 class="font-semibold text-xl">claire</h3>
           <p class="text-gray-400">boba expert</p>
         </div>
@@ -159,6 +177,10 @@ using -->
 
   <!-- activate  icons -->
   <script>lucide.createIcons();</script>
+
+
+
+  
 </body>
 
 </html>

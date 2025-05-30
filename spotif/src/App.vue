@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import BobaApp from './components/BobaApp.vue'; // Import your boba component
+import BobaApp from './components/BobaApp.vue'; // import your boba component
 
 //declaring relevant variables 
 const accessToken = ref('');
@@ -10,7 +10,7 @@ const energy = ref('');
 const season = ref('');
 const errorMsg = ref('');
 
-//gets the Spotify user data, displaying message if it fails
+//gets the spotify user data, displaying message if it fails
 async function fetchSpotifyUser(token) {
   const res = await fetch('https://api.spotify.com/v1/me', {
     headers: { Authorization: `Bearer ${token}` }
@@ -96,7 +96,7 @@ onMounted(() => {
         <p><strong>season:</strong> {{ season }}</p>
       </div>
       
-      <!-- Boba component with the recommendation -->
+      <!-- boba component from bobaapp.vue with the recommendation -->
       <BobaApp :boba-tea="bobaTea" v-if="bobaTea" />
     </div>
   </div>

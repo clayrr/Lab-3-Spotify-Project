@@ -1,7 +1,7 @@
 <template>
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">your personalized boba!</h1>
-    
+    <!-- header -->
     <div v-if="selectedBoba" class="flex justify-center">
       <div class="rounded-xl shadow-lg p-4 border hover:shadow-xl transition max-w-md">
         <div class="text-center">
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    
+    <!-- error message -> you did something wrong! -->
     <div v-else class="text-center">
       <p class="text-gray-600">No boba recommendation found. Please check your Spotify integration.</p>
     </div>
@@ -27,14 +27,18 @@
 <script>
 export default {
   name: 'BobaApp',
+
+  //recieves a bobaTea string as a prop from the parent component (app.vue)
   props: {
     bobaTea: {
       type: String,
       default: ''
     }
   },
+  
   data() {
     return {
+      //hardcoded list of avaiable boba options
       bobaOptions: [
         {
           name: 'brown sugar boba',
@@ -65,16 +69,17 @@ export default {
     };
   },
   computed: {
+    //determines which boba to show
     selectedBoba() {
       if (!this.bobaTea) return null;
       
-      // Find matching boba based on the recommendation
+      // try matching boba based on the recommendation
       const foundBoba = this.bobaOptions.find(boba => 
         boba.name.toLowerCase().includes(this.bobaTea.toLowerCase()) ||
         this.bobaTea.toLowerCase().includes(boba.name.toLowerCase())
       );
       
-      return foundBoba || this.bobaOptions[0]; // Default to first option if no match
+      return foundBoba || this.bobaOptions[0]; // default to first option if no match
     }
   }
 };
