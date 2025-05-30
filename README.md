@@ -18,7 +18,7 @@ git clone https://github.com/clayrr/Lab-3-Spotify-Project.git
 
 ### 1. Environment Configuration
 
-Create a `.env` file in the "big" folder with the Spotify API credentials (provided separately via email).
+Create a `.env` file in the "big" folder with the Spotify API credentials (file provided separately via email).
 
 ### 2. Backend Setup
 
@@ -36,7 +36,7 @@ Your backend is now running!
 
 ### 3. Frontend Setup
 
-Navigate to the frontend directory:
+In a different terminal, navigate to the frontend directory:
 ```bash
 cd spotif
 ```
