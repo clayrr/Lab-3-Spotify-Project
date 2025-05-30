@@ -36,7 +36,7 @@ Your backend is now running!
 
 ### 3. Frontend Setup
 
-Navigate to the frontend directory:
+In a different terminal, navigate to the frontend directory:
 ```bash
 cd spotif
 ```
