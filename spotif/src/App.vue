@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import BobaApp from './components/BobaApp.vue'; // Import your boba component
 
+//declaring relevant variables 
 const accessToken = ref('');
 const userData = ref(null);
 const bobaTea = ref('');
@@ -9,6 +10,7 @@ const energy = ref('');
 const season = ref('');
 const errorMsg = ref('');
 
+//gets the Spotify user data, displaying message if it fails
 async function fetchSpotifyUser(token) {
   const res = await fetch('https://api.spotify.com/v1/me', {
     headers: { Authorization: `Bearer ${token}` }
@@ -33,7 +35,7 @@ async function fetchBackendData(token) {
       errorMsg.value = 'Failed to fetch data from backend.';
       return;
     }
-
+  //parsing and storing responses
     const bubbleData = await bubbleRes.json();
     const energyData = await energyRes.json();
     const seasonData = await seasonRes.json();
@@ -46,7 +48,7 @@ async function fetchBackendData(token) {
     console.error(err);
   }
 }
-
+//gets access token and fetches data
 onMounted(() => {
   let token = null;
   const hash = window.location.hash;
@@ -70,7 +72,7 @@ onMounted(() => {
 <template>
   <div class="container" style="max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
     <div v-if="errorMsg" style="color: red; margin-bottom: 1em;">{{ errorMsg }}</div>
-    
+    <!-- tells user to log in-->
     <div v-if="!accessToken">
       <p>please log in to access your personalized music data. yay!</p>
       <a href="http://localhost:8888/login" style="text-decoration: none; background: #1db954; color: white; padding: 10px 20px; border-radius: 25px; display: inline-block; margin-top: 1em;">Log in with Spotify</a>
@@ -80,6 +82,7 @@ onMounted(() => {
       <p>loading your spotify data...</p>
     </div>
     
+    <!-- displays users name, profile picture, and recommendations based on data-->
     <div v-else>
       <h2>hello, {{ userData.display_name }}!</h2>
       <p><strong>email:</strong> {{ userData.email }}</p>
