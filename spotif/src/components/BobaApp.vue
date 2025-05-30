@@ -11,7 +11,7 @@
           <img
             :src="selectedBoba.image"
             :alt="selectedBoba.name"
-            class="w-full h-48 object-cover rounded-md mb-2"
+            class="w-full object-cover rounded-md mb-2"
           />
           <p class="text-sm text-gray-600">{{ selectedBoba.description }}</p>
         </div>
