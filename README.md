@@ -7,6 +7,13 @@ An application that analyzes Spotify data and provides interactive features incl
 - Node.js (version 14 or higher)
 - npm (Node Package Manager)
 
+Before you start, please git clone this repo in your terminal :
+
+```bash
+git clone https://github.com/clayrr/Lab-3-Spotify-Project.git
+```
+
+
 ## Setup Instructions
 
 ### 1. Environment Configuration
